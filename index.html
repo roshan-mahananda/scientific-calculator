@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        #display::-webkit-scrollbar { height: 4px; }
+        #display::-webkit-scrollbar-track { background: transparent; }
+        #display::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-gray-900 p-6 rounded-3xl shadow-2xl w-full max-w-sm border border-gray-800">
+        
+        <div class="bg-gray-800 p-4 rounded-2xl mb-6 shadow-inner border border-gray-700">
+            <input type="text" id="display" 
+                   class="w-full bg-transparent text-right text-3xl font-semibold text-white focus:outline-none tracking-wider overflow-x-auto" 
+                   placeholder="0" readonly>
+        </div>
+
+        <div class="grid grid-cols-4 gap-3">
+            <button onclick="appendValue('sin(')" class="bg-gray-700 hover:bg-gray-600 text-gray-200 py-3 rounded-xl font-medium transition">sin</button>
+            <button onclick="appendValue('cos(')" class="bg-gray-700 hover:bg-gray-600 text-gray-200 py-3 rounded-xl font-medium transition">cos</button>
+            <button onclick="appendValue('tan(')" class="bg-gray-700 hover:bg-gray-600 text-gray-200 py-3 rounded-xl font-medium transition">tan</button>
+            <button onclick="clearDisplay()" class="bg-red-500 hover:bg-red-400 text-white py-3 rounded-xl font-semibold shadow-lg transition">AC</button>
+
+            <button onclick="appendValue('log(')" class="bg-gray-700 hover:bg-gray-600 text-gray-200 py-3 rounded-xl font-medium transition">log</button>
+            <button onclick="appendValue('sqrt(')" class="bg-gray-700 hover:bg-gray-600 text-gray-200 py-3 rounded-xl font-medium transition">√</button>
+            <button onclick="appendValue('^')" class="bg-gray-700 hover:bg-gray-600 text-gray-200 py-3 rounded-xl font-medium transition">xʸ</button>
+            <button onclick="deleteLast()" class="bg-orange-500 hover:bg-orange-400 text-white py-3 rounded-xl font-semibold shadow-lg transition">DEL</button>
+
+            <button onclick="appendValue('7')" class="bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-xl text-xl font-medium transition border border-gray-700">7</button>
+            <button onclick="appendValue('8')" class="bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-xl text-xl font-medium transition border border-gray-700">8</button>
+            <button onclick="appendValue('9')" class="bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-xl text-xl font-medium transition border border-gray-700">9</button>
+            <button onclick="appendValue('/')" class="bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-xl font-semibold shadow-lg transition">÷</button>
+
+            <button onclick="appendValue('4')" class="bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-xl text-xl font-medium transition border border-gray-700">4</button>
+            <button onclick="appendValue('5')" class="bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-xl text-xl font-medium transition border border-gray-700">5</button>
+            <button onclick="appendValue('6')" class="bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-xl text-xl font-medium transition border border-gray-700">6</button>
+            <button onclick="appendValue('*')" class="bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-xl font-semibold shadow-lg transition">×</button>
+
+            <button onclick="appendValue('1')" class="bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-xl text-xl font-medium transition border border-gray-700">1</button>
+            <button onclick="appendValue('2')" class="bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-xl text-xl font-medium transition border border-gray-700">2</button>
+            <button onclick="appendValue('3')" class="bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-xl text-xl font-medium transition border border-gray-700">3</button>
+            <button onclick="appendValue('-')" class="bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-xl font-semibold shadow-lg transition">−</button>
+
+            <button onclick="appendValue('0')" class="bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-xl text-xl font-medium transition border border-gray-700">0</button>
+            <button onclick="appendValue('.')" class="bg-gray-800 hover:bg-gray-700 text-white py-3 rounded-xl text-xl font-medium transition border border-gray-700">.</button>
+            <button onclick="appendValue(')')" class="bg-gray-700 hover:bg-gray-600 text-gray-200 py-3 rounded-xl font-medium transition">)</button>
+            <button onclick="appendValue('+')" class="bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl text-xl font-semibold shadow-lg transition">+</button>
+
+            <button onclick="calculateResult()" class="col-span-4 bg-teal-500 hover:bg-teal-400 text-white py-3 rounded-xl text-xl font-bold shadow-lg mt-1 transition">=</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+
+        function appendValue(val) {
+            if (display.value === '0' || display.value === 'Error') {
+                display.value = '';
+            }
+            display.value += val;
+            display.scrollLeft = display.scrollWidth;
+        }
+
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        function deleteLast() {
+            if (display.value === 'Error') {
+                display.value = '';
+            } else {
+                display.value = display.value.slice(0, -1);
+            }
+        }
+
+        function calculateResult() {
+            if (!display.value) return;
+            
+            try {
+                let expression = display.value
+                    .replace(/sin\(/g, 'Math.sin(')
+                    .replace(/cos\(/g, 'Math.cos(')
+                    .replace(/tan\(/g, 'Math.tan(')
+                    .replace(/log\(/g, 'Math.log10(')
+                    .replace(/sqrt\(/g, 'Math.sqrt(')
+                    .replace(/\^/g, '**');
+
+                let result = eval(expression);
+                
+                if (!Number.isInteger(result)) {
+                    result = parseFloat(result.toFixed(8));
+                }
+                
+                display.value = result;
+            } catch (error) {
+                display.value = 'Error';
+            }
+        }
+    </script>
+</body>
+</html>
